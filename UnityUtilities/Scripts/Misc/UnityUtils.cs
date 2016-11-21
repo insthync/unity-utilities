@@ -3,11 +3,6 @@ using UnityEngine.Rendering;
 using UnityEngine.Networking;
 public static class UnityUtils
 {
-    /// <summary>
-    /// Is any of the keys UP?
-    /// </summary>
-    /// <param name="keys"></param>
-    /// <returns></returns>
     public static bool IsAnyKeyUp(KeyCode[] keys)
     {
         foreach (KeyCode key in keys)
@@ -17,12 +12,7 @@ public static class UnityUtils
         }
         return false;
     }
-
-    /// <summary>
-    /// Is any of the keys DOWN?
-    /// </summary>
-    /// <param name="keys"></param>
-    /// <returns></returns>
+    
     public static bool IsAnyKeyDown(KeyCode[] keys)
     {
         foreach (KeyCode key in keys)
