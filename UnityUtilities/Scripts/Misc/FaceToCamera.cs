@@ -2,8 +2,12 @@
 
 public class FaceToCamera : MonoBehaviour
 {
+    public Camera targetCamera;
     void FixedUpdate()
     {
-        transform.forward = Camera.main.transform.forward;
+        Camera camera = targetCamera;
+        if (camera == null)
+            camera = Camera.main;
+        transform.forward = camera.transform.forward;
     }
 }
