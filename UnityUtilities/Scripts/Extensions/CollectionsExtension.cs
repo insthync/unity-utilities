@@ -17,6 +17,15 @@ public static class CollectionsExtension
         }
     }
 
+    public static List<TKey> ToKeysList<TKey, TValue>(this IDictionary<TKey, TValue> list)
+    {
+        List<TKey> returnList = new List<TKey>();
+        var enumerator = list.GetEnumerator();
+        while (enumerator.MoveNext())
+            returnList.Add(enumerator.Current.Key);
+        return returnList;
+    }
+
     public static List<TValue> ToValuesList<TKey, TValue>(this IDictionary<TKey, TValue> list)
     {
         List<TValue> returnList = new List<TValue>();
