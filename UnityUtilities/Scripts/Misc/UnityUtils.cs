@@ -22,11 +22,7 @@ public static class UnityUtils
         }
         return false;
     }
-
-    /// <summary>
-    /// Detect headless mode (which has graphicsDeviceType Null)
-    /// </summary>
-    /// <returns></returns>
+    
     public static bool IsHeadless()
     {
         return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
