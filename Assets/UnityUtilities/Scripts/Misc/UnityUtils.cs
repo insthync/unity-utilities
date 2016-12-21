@@ -22,7 +22,17 @@ public static class UnityUtils
         }
         return false;
     }
-    
+
+    public static bool IsAnyKey(KeyCode[] keys)
+    {
+        foreach (KeyCode key in keys)
+        {
+            if (Input.GetKey(key))
+                return true;
+        }
+        return false;
+    }
+
     public static bool IsHeadless()
     {
         return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
