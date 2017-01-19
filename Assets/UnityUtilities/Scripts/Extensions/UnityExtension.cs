@@ -23,7 +23,7 @@ public static class UnityExtension
         if (particleSystem == null)
             return null;
 
-        Object.Destroy(particleSystem.gameObject, particleSystem.duration + particleSystem.startLifetime);
+        Object.Destroy(particleSystem.gameObject, particleSystem.main.duration);
         return particleSystem;
     }
 
