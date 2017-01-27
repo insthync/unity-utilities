@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public static class CollectionsExtension
 {
@@ -19,20 +20,12 @@ public static class CollectionsExtension
 
     public static List<TKey> ToKeysList<TKey, TValue>(this IDictionary<TKey, TValue> list)
     {
-        List<TKey> returnList = new List<TKey>();
-        var enumerator = list.GetEnumerator();
-        while (enumerator.MoveNext())
-            returnList.Add(enumerator.Current.Key);
-        return returnList;
+        return Enumerable.ToList(list.Keys);
     }
 
     public static List<TValue> ToValuesList<TKey, TValue>(this IDictionary<TKey, TValue> list)
     {
-        List<TValue> returnList = new List<TValue>();
-        var enumerator = list.GetEnumerator();
-        while (enumerator.MoveNext())
-            returnList.Add(enumerator.Current.Value);
-        return returnList;
+        return Enumerable.ToList(list.Values);
     }
 
     public static string GetString<TKey, TValue>(this IDictionary<TKey, TValue> list, TKey key, string defaultValue = "")
