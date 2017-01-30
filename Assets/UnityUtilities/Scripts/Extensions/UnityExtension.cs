@@ -61,9 +61,9 @@ public static class UnityExtension
 
     /// <summary>
     /// Find closest distance between 2 colliders like this ->
-    /// |_a_|---|_b_| 
+    /// [ a ]---[ b ]
     /// Unlike Vector3.Distance(a, b) ->
-    /// |_a-------b_|
+    /// [ a-------b ]
     /// </summary>
     public static float ClosestDistanceBetweenColliders(this Collider a, Collider b)
     {
@@ -76,9 +76,9 @@ public static class UnityExtension
 
     /// <summary>
     /// Find closest distance between 2 colliders like this ->
-    /// |_a-----|_b_| 
+    /// [ a-----[ b ]
     /// Unlike Vector3.Distance(a, b) ->
-    /// |_a-------b_|
+    /// [ a-------b ]
     /// </summary>
     public static float ClosestDistanceToBounds(this Transform a, Collider b)
     {
