@@ -39,6 +39,33 @@ public class PhysicsIgnoreByTags : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        if (PhysicCollider != null)
+            IgnoreCollisionByRadius(PhysicCollider, PhysicCollider.bounds.size.x);
+        if (PhysicCharacterController != null)
+            IgnoreCollisionByRadius(PhysicCharacterController, PhysicCharacterController.bounds.size.x);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        if (PhysicCollider != null)
+            Gizmos.DrawWireSphere(PhysicCollider.bounds.center, PhysicCollider.bounds.size.x);
+        if (PhysicCharacterController != null)
+            Gizmos.DrawWireSphere(PhysicCharacterController.bounds.center, PhysicCharacterController.bounds.size.x);
+    }
+
+    void IgnoreCollisionByRadius(Collider targetCol, float radius)
+    {
+        Collider[] colliders = Physics.OverlapSphere(targetCol.bounds.center, radius);
+        for (int i = 0; i < colliders.Length; ++i)
+        {
+            Collider foundCol = colliders[i];
+            IgnoreCollision(foundCol, targetCol);
+        }
+    }
+
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         IgnoreCollision(hit.collider, PhysicCharacterController);
