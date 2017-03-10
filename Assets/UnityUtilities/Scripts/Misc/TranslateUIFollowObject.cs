@@ -11,7 +11,7 @@ public class TranslateUIFollowObject : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (target != null)
         {

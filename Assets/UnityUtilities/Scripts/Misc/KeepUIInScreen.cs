@@ -11,7 +11,7 @@ public class KeepUIInScreen : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         Rect transformRect = rectTransform.rect;
 
