@@ -15,7 +15,10 @@ public class PhysicsIgnoreByLayers : MonoBehaviour
         for (int i = 0; i < layerPairs.Length; ++i)
         {
             LayerPair layerPair = layerPairs[i];
-            Physics.IgnoreLayerCollision(LayerMask.NameToLayer(layerPair.layer1), LayerMask.NameToLayer(layerPair.layer2), true);
+            int layer1 = LayerMask.NameToLayer(layerPair.layer1);
+            int layer2 = LayerMask.NameToLayer(layerPair.layer2);
+            if (layer1 >= 0 && layer1 < 32 && layer2 >= 0 && layer2 < 32)
+                Physics.IgnoreLayerCollision(layer1, layer2, true);
         }
     }
 }
