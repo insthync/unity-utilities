@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
 ///     Adding this script to UI elements makes them draggable
 ///     Based on Barebone Masterserver - Draggable script
 /// </summary>
-public class UIDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UIDraggable : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     private CanvasGroup _group;
     private RectTransform _rectTransform;
@@ -17,6 +18,12 @@ public class UIDraggable : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     public bool SetAsLastSiblingOnEnable = true;
     public bool ChangeOpacity = true;
     public float DraggedOpacity = 0.7f;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (SetAsLastSiblingOnDrag)
+            transform.SetAsLastSibling();
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
