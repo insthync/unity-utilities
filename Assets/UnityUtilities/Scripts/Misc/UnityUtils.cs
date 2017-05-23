@@ -38,17 +38,33 @@ public static class UnityUtils
         return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
     }
 
-    public static bool TryGetByNetId<T>(NetworkInstanceId targetNetId, out T output) where T : Component
+    public static bool TryGetGameObjectByNetId(NetworkInstanceId targetNetId, out GameObject output)
     {
         output = null;
-        GameObject foundObject = ClientScene.FindLocalObject(targetNetId);
-        if (foundObject == null)
-            return false;
+        if (NetworkServer.active)
+            output = NetworkServer.FindLocalObject(targetNetId);
+        else
+            output = ClientScene.FindLocalObject(targetNetId);
 
-        output = foundObject.GetComponent<T>();
         if (output == null)
             return false;
 
         return true;
+    }
+
+    public static bool TryGetComponentByNetId<T>(NetworkInstanceId targetNetId, out T output) where T : Component
+    {
+        output = null;
+
+        GameObject foundObject = null;
+        if (TryGetGameObjectByNetId(targetNetId, out foundObject))
+        {
+            output = foundObject.GetComponent<T>();
+            if (output == null)
+                return false;
+
+            return true;
+        }
+        return false;
     }
 }
