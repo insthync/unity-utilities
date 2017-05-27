@@ -14,7 +14,8 @@ public class FollowCamera : MonoBehaviour
     [Range(0, 65)]
     public float damping = 2.0f;
 
-    void LateUpdate()
+
+    private void FixedUpdate()
     {
         // Early out if we don't have a target
         if (!target) return;
