@@ -1,0 +1,148 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class InputManager
+{
+    private static Dictionary<string, SimulateButton> simulateInputs = new Dictionary<string, SimulateButton>();
+    private static Dictionary<string, SimulateAxis> simulateAxis = new Dictionary<string, SimulateAxis>();
+
+    public static float GetAxis(string name, bool raw)
+    {
+        float axis = raw ? Input.GetAxisRaw(name) : Input.GetAxis(name);
+        if (axis == 0 && simulateAxis.ContainsKey(name))
+            axis = simulateAxis[name].GetValue;
+        return axis;
+    }
+
+    public static bool GetButton(string name)
+    {
+        return Input.GetButton(name) || (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButton);
+    }
+
+    public static bool GetButtonDown(string name)
+    {
+        return Input.GetButtonDown(name) || (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButtonDown);
+    }
+
+    public static bool GetButtonUp(string name)
+    {
+        return Input.GetButtonUp(name) || (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButtonUp);
+    }
+
+    public static void SetButtonDown(string name)
+    {
+        if (!simulateInputs.ContainsKey(name))
+        {
+            var inputData = new SimulateButton();
+            simulateInputs.Add(name, inputData);
+        }
+        simulateInputs[name].Press();
+    }
+
+    public static void SetButtonUp(string name)
+    {
+        if (!simulateInputs.ContainsKey(name))
+        {
+            var inputData = new SimulateButton();
+            simulateInputs.Add(name, inputData);
+        }
+        simulateInputs[name].Release();
+    }
+
+    public static void SetAxisPositive(string name)
+    {
+        if (!simulateAxis.ContainsKey(name))
+        {
+            var inputData = new SimulateAxis();
+            simulateAxis.Add(name, inputData);
+        }
+        simulateAxis[name].Update(1f);
+    }
+    
+    public static void SetAxisNegative(string name)
+    {
+        if (!simulateAxis.ContainsKey(name))
+        {
+            var inputData = new SimulateAxis();
+            simulateAxis.Add(name, inputData);
+        }
+        simulateAxis[name].Update(-1f);
+    }
+
+    public static void SetAxisZero(string name)
+    {
+        if (!simulateAxis.ContainsKey(name))
+        {
+            var inputData = new SimulateAxis();
+            simulateAxis.Add(name, inputData);
+        }
+        simulateAxis[name].Update(0);
+    }
+    
+    public static void SetAxis(string name, float value)
+    {
+        if (!simulateAxis.ContainsKey(name))
+        {
+            var inputData = new SimulateAxis();
+            simulateAxis.Add(name, inputData);
+        }
+        simulateAxis[name].Update(value);
+    }
+
+    public static Vector3 MousePosition()
+    {
+        return Input.mousePosition;
+    }
+
+    public class SimulateButton
+    {
+        private int lastPressedFrame = -5;
+        private int releasedFrame = -5;
+        private bool pressed;
+
+        public void Press()
+        {
+            if (pressed)
+                return;
+            pressed = true;
+            lastPressedFrame = Time.frameCount;
+        }
+
+        public void Release()
+        {
+            pressed = false;
+            releasedFrame = Time.frameCount;
+        }
+
+        public bool GetButton
+        {
+            get { return pressed; }
+        }
+
+        public bool GetButtonDown
+        {
+            get { return lastPressedFrame - Time.frameCount == -1; }
+        }
+
+        public bool GetButtonUp
+        {
+            get { return (releasedFrame == Time.frameCount - 1); }
+        }
+    }
+
+    public class SimulateAxis
+    {
+        private float value;
+
+        public void Update(float value)
+        {
+            this.value = value;
+        }
+
+        public float GetValue
+        {
+            get { return value; }
+        }
+    }
+}

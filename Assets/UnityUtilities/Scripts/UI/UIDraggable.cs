@@ -8,10 +8,10 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class UIDraggable : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    private CanvasGroup _group;
-    private RectTransform _rectTransform;
-    private float _offsetY;
-    private float _offsetX;
+    private CanvasGroup group;
+    private RectTransform rectTransform;
+    private float offsetY;
+    private float offsetX;
 
     public bool KeepInScreen = true;
     public bool SetAsLastSiblingOnDrag = true;
@@ -27,16 +27,16 @@ public class UIDraggable : MonoBehaviour, IPointerClickHandler, IDragHandler, IB
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _offsetX = transform.position.x - Input.mousePosition.x;
-        _offsetY = transform.position.y - Input.mousePosition.y;
+        offsetX = transform.position.x - Input.mousePosition.x;
+        offsetY = transform.position.y - Input.mousePosition.y;
 
-        if (_group != null)
-            _group.alpha = DraggedOpacity;
+        if (group != null)
+            group.alpha = DraggedOpacity;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        transform.position = new Vector3(_offsetX + Input.mousePosition.x, _offsetY + Input.mousePosition.y);
+        transform.position = new Vector3(offsetX + Input.mousePosition.x, offsetY + Input.mousePosition.y);
         if (SetAsLastSiblingOnDrag)
             transform.SetAsLastSibling();
         UpdateKeepInScreen();
@@ -44,8 +44,8 @@ public class UIDraggable : MonoBehaviour, IPointerClickHandler, IDragHandler, IB
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (_group != null)
-            _group.alpha = 1f;
+        if (group != null)
+            group.alpha = 1f;
         UpdateKeepInScreen();
     }
 
@@ -57,9 +57,9 @@ public class UIDraggable : MonoBehaviour, IPointerClickHandler, IDragHandler, IB
         var oldPosition = transform.position;
         // Keeping ui in screen
         var screenSize = new Vector3(Screen.width, Screen.height);
-        Rect transformRect = _rectTransform.rect;
-        var worldSpaceRectMin = _rectTransform.TransformPoint(transformRect.min);
-        var worldSpaceRectMax = _rectTransform.TransformPoint(transformRect.max);
+        Rect transformRect = rectTransform.rect;
+        var worldSpaceRectMin = rectTransform.TransformPoint(transformRect.min);
+        var worldSpaceRectMax = rectTransform.TransformPoint(transformRect.max);
         var moveableMax = screenSize - (worldSpaceRectMax - worldSpaceRectMin);
 
         var x = worldSpaceRectMin.x;
@@ -80,8 +80,8 @@ public class UIDraggable : MonoBehaviour, IPointerClickHandler, IDragHandler, IB
 
     private void Awake()
     {
-        _group = GetComponent<CanvasGroup>();
-        _rectTransform = GetComponent<RectTransform>();
+        group = GetComponent<CanvasGroup>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     private void OnEnable()
