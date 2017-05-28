@@ -6,8 +6,9 @@ public class TestInputScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        InputManager.useMobileInputOnNonMobile = true;
+
+    }
 	
 	// Update is called once per frame
 	void Update ()
