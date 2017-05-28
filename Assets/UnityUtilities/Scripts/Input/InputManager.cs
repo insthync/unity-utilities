@@ -6,28 +6,42 @@ public static class InputManager
 {
     private static Dictionary<string, SimulateButton> simulateInputs = new Dictionary<string, SimulateButton>();
     private static Dictionary<string, SimulateAxis> simulateAxis = new Dictionary<string, SimulateAxis>();
+    public static bool useMobileInputOnNonMobile = false;
 
     public static float GetAxis(string name, bool raw)
     {
-        float axis = raw ? Input.GetAxisRaw(name) : Input.GetAxis(name);
-        if (axis == 0 && simulateAxis.ContainsKey(name))
-            axis = simulateAxis[name].GetValue;
+        float axis = 0;
+        if (useMobileInputOnNonMobile || Application.isMobilePlatform)
+        {
+            if (axis == 0 && simulateAxis.ContainsKey(name))
+                axis = simulateAxis[name].GetValue;
+        }
+        else
+        {
+            axis = raw ? Input.GetAxisRaw(name) : Input.GetAxis(name);
+        }
         return axis;
     }
 
     public static bool GetButton(string name)
     {
-        return Input.GetButton(name) || (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButton);
+        if (useMobileInputOnNonMobile || Application.isMobilePlatform)
+            return (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButton);
+        return Input.GetButton(name);
     }
 
     public static bool GetButtonDown(string name)
     {
-        return Input.GetButtonDown(name) || (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButtonDown);
+        if (useMobileInputOnNonMobile || Application.isMobilePlatform)
+            return (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButtonDown);
+        return Input.GetButtonDown(name);
     }
 
     public static bool GetButtonUp(string name)
     {
-        return Input.GetButtonUp(name) || (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButtonUp);
+        if (useMobileInputOnNonMobile || Application.isMobilePlatform)
+            return (simulateInputs.ContainsKey(name) && simulateInputs[name].GetButtonUp);
+        return Input.GetButtonUp(name);
     }
 
     public static void SetButtonDown(string name)

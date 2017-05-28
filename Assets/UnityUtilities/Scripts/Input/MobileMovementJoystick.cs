@@ -17,7 +17,7 @@ public class MobileMovementJoystick : MonoBehaviour, IPointerDownHandler, IPoint
     private Vector3 defaultControllerPosition;
     private Vector3 startDragPosition;
 
-    private void Awake()
+    private void Start()
     {
         if (movementBackground != null)
             backgroundOffset = movementBackground.position - movementController.position;

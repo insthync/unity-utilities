@@ -21,10 +21,10 @@ public class FollowCamera : MonoBehaviour
         if (!target) return;
 
         var wantedPosition = target.position + targetOffset;
-        var wantedRotationAngle = useTargetYRotation ? target.eulerAngles.y : yRotation;
+        var wantedYRotation = useTargetYRotation ? target.eulerAngles.y : yRotation;
 
         // Convert the angle into a rotation
-        var currentRotation = Quaternion.Euler(xRotation, yRotation, 0);
+        var currentRotation = Quaternion.Euler(xRotation, wantedYRotation, 0);
 
         // Set the position of the camera on the x-z plane to:
         // distance meters behind the target
