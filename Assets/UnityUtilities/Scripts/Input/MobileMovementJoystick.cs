@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MobileMovementJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class MobileMovementJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public int movementRange = 150;
     public bool useAxisX = true;
@@ -12,6 +12,8 @@ public class MobileMovementJoystick : MonoBehaviour, IPointerDownHandler, IPoint
     public RectTransform movementBackground;
     [Tooltip("This is the button to control movement")]
     public RectTransform movementController;
+    private bool isDragging = false;
+    private int touchId;
     private Vector3 backgroundOffset;
     private Vector3 defaultControllerPosition;
     private Vector3 startDragPosition;
@@ -25,6 +27,11 @@ public class MobileMovementJoystick : MonoBehaviour, IPointerDownHandler, IPoint
 
     public void OnPointerDown(PointerEventData data)
     {
+        if (isDragging)
+            return;
+
+        isDragging = true;
+        touchId = data.pointerId;
         movementController.position = new Vector3(data.position.x, data.position.y, transform.position.z);
         if (movementBackground != null)
             movementBackground.position = backgroundOffset + movementController.position;
@@ -33,6 +40,13 @@ public class MobileMovementJoystick : MonoBehaviour, IPointerDownHandler, IPoint
 
     public void OnPointerUp(PointerEventData data)
     {
+        if (!isDragging)
+            return;
+        if (data.pointerId != touchId)
+            return;
+
+        isDragging = false;
+        touchId = -1;
         movementController.position = defaultControllerPosition;
         if (movementBackground != null)
             movementBackground.position = backgroundOffset + movementController.position;
@@ -44,11 +58,18 @@ public class MobileMovementJoystick : MonoBehaviour, IPointerDownHandler, IPoint
             InputManager.SetAxis(axisYName, 0);
     }
 
-    public void OnDrag(PointerEventData data)
+
+    private void Update()
     {
+        if (!isDragging)
+            return;
+
         Vector3 newPos = Vector3.zero;
 
-        var allowedPos = new Vector3(data.position.x, data.position.y, 0) - startDragPosition;
+        var currentPosition = Input.mousePosition;
+        if (Application.isMobilePlatform)
+            currentPosition = Input.touches[touchId].position;
+        var allowedPos = new Vector3(currentPosition.x, currentPosition.y, 0) - startDragPosition;
         allowedPos = Vector3.ClampMagnitude(allowedPos, movementRange);
 
         if (useAxisX)

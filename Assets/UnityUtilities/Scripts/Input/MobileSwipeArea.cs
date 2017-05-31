@@ -16,6 +16,9 @@ public class MobileSwipeArea : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     public void OnPointerDown(PointerEventData data)
     {
+        if (isDragging)
+            return;
+
         isDragging = true;
         previousTouchPosition = Input.mousePosition;
         touchId = data.pointerId;
@@ -25,6 +28,11 @@ public class MobileSwipeArea : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     public void OnPointerUp(PointerEventData data)
     {
+        if (!isDragging)
+            return;
+        if (data.pointerId != touchId)
+            return;
+
         isDragging = false;
         touchId = -1;
         UpdateVirtualAxes(Vector3.zero);
