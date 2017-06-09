@@ -59,33 +59,55 @@ public static class UnityExtension
         return audioSource;
     }
 
-    /// <summary>
-    /// Find closest distance between 2 colliders like this ->
-    /// [ a ]---[ b ]
-    /// Unlike Vector3.Distance(a, b) ->
-    /// [ a-------b ]
-    /// </summary>
-    public static float ClosestDistanceBetweenColliders(this Collider a, Collider b)
+    public static float DistanceBetweenColliderBounds(this Collider a, Collider b)
     {
         if (a == null || b == null)
             return float.MaxValue;
-        var posA = a.transform.position;
-        var posB = b.transform.position;
-        return Vector3.Distance(a.ClosestPointOnBounds(posB), b.ClosestPointOnBounds(posA));
+            
+        return Vector3.Distance(a.FindRayHitPointToCollider(b), b.FindRayHitPointToCollider(a));
+    }
+    
+    public static float DistanceToCollider(this Transform transform, Collider targetCollider)
+    {
+        if (transform == null || targetCollider == null)
+            return float.MaxValue;
+        return DistanceToCollider(transform.position, targetCollider);
     }
 
-    /// <summary>
-    /// Find closest distance between 2 colliders like this ->
-    /// [ a-----[ b ]
-    /// Unlike Vector3.Distance(a, b) ->
-    /// [ a-------b ]
-    /// </summary>
-    public static float ClosestDistanceToBounds(this Transform a, Collider b)
+    public static float DistanceToCollider(this Vector3 posA, Collider targetCollider)
     {
-        if (a == null || b == null)
+        if (targetCollider == null)
             return float.MaxValue;
-        var posA = a.position;
-        return Vector3.Distance(b.ClosestPointOnBounds(posA), posA);
+        return Vector3.Distance(posA.FindRayHitPointToCollider(targetCollider), posA);
+    }
+
+    public static Vector3 FindRayHitPointToCollider(this Collider collider, Collider targetCollider)
+    {
+        return FindRayHitPointToCollider(collider.transform, targetCollider);
+    }
+
+    public static Vector3 FindRayHitPointToCollider(this Transform transform, Collider targetCollider)
+    {
+        return FindRayHitPointToCollider(transform.position, targetCollider);
+    }
+
+    public static Vector3 FindRayHitPointToCollider(this Vector3 posA, Collider targetCollider)
+    {
+        var posB = targetCollider.transform.position;
+        var heading = posB - posA;
+        var distance = heading.magnitude;
+        var direction = heading / distance; // This is now the normalized direction.
+        Vector3 hitPointFromAToBCollider = posB;
+        var hitAToB = Physics.RaycastAll(posA, direction, distance);
+        foreach (var hit in hitAToB)
+        {
+            if (targetCollider.transform == hit.transform)
+            {
+                hitPointFromAToBCollider = hit.point;
+                break;
+            }
+        }
+        return hitPointFromAToBCollider;
     }
 
     /// <summary>
